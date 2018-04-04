@@ -10,9 +10,7 @@ interface MoveInterface
   * Makes a move using the $boardState
   * $boardState contains 2 dimensional array of the game
  field
-  * X represents one team, O - the other team, empty
- string means field is
- not yet taken.
+  * X represents one team, O - the other team, empty string means field is not yet taken.
   * example
   * [['X', 'O', '']
   * ['X', 'O', 'O']
