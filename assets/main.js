@@ -1,7 +1,5 @@
-/********************************************/
-/* @author : Pauline Ghiazza                */
-/* @author site : www.paulineghiazza.fr     */
-/********************************************/
+var computerPlayed=false;
+var gameON=true;
 
 $(function() {
 
@@ -13,6 +11,10 @@ $(function() {
     displayNextPlayer(turn, player);
 
     $('td').click(function() {
+        if (gameON==false){
+            console.log(gameON);
+            return false;
+        }
         td = $(this);
         var state = getState(td);
         if(!state) {
@@ -20,15 +22,28 @@ $(function() {
             changeState(td, pattern);
 
             if ($('#autoplay').is(':checked')){
-                autoMove(table);
+                if (computerPlayed){
+                    computerPlayed=false;
+                }else {
+                    autoMove(table, pattern);
+                }
             }
 
             if(checkIfPlayerWon(table, pattern)) {
                 messages.html('Player '+player+' has won.');
+                gameON=false;
                 turn.html('');
             } else {
-                player = setNextPlayer(player);
-                displayNextPlayer(turn, player);
+
+                if(checkIfTie(table)) {
+                    messages.html('Result is Tie.');
+                    gameON=false;
+                    turn.html('');
+                }else {
+                    player = setNextPlayer(player);
+                    displayNextPlayer(turn, player);
+                }
+
             }
         } else {
             messages.html('This box is already checked.');
@@ -36,6 +51,7 @@ $(function() {
     });
 
     $('.reset').click(function() {
+        gameON=true;
         player = 1;
         messages.html('');
         reset(table);
@@ -44,25 +60,57 @@ $(function() {
 
 });
 
-function autoMove(table) {
-    var x_tds='';
-    var o_tds='';
-    table.find('.cross').each(function() {
-        x_tds += $( this ).data('num')+',';
+/**
+ *
+ * @param table
+ * @param pattern
+ */
+function autoMove(table, pattern) {
+    var row1 = [];
+    var row2 = [];
+    var row3 = [];
+    var playerUnit;
+    table.find('td').each(function (index) {
+        var item = '';
+        if ($(this).hasClass('cross')) {
+            item = 'X';
+        } else if ($(this).hasClass('circle')) {
+            item = 'O';
+        }
+        if ([0, 1, 2].indexOf(index) != -1) {
+            row1.push(item);
+        } else if ([3, 4, 5].indexOf(index) != -1) {
+            row2.push(item);
+        } else if ([6, 7, 8].indexOf(index) != -1) {
+            row3.push(item);
+        }
     });
-    table.find('.circle').each(function() {
-        o_tds += $( this ).data('num')+',';
-    });
-    
+
+    var rows = [row1,row2,row3];
+
+    if (pattern = 'cross') {
+        playerUnit='X';
+    } else{
+        playerUnit='O';
+    }
     $.ajax({
-        url: '/ApiCall.php',
-        data: {x:x_tds, o: o_tds},
+        type: "POST",
+        url: window.location.href+'src/ApiCall.php',
+        data: {boardState: rows, playerUnit: playerUnit},
         success: function (data) {
-            console.log(data);
+            setTimeout(function () {
+                $('td[data-x='+data[0]+'][data-y='+data[1]+']').click();
+            },300);
+            computerPlayed=true;
         }
     });
 }
 
+/**
+ *
+ * @param td
+ * @returns {number}
+ */
 function getState(td) {
     if(td.hasClass('cross') || td.hasClass('circle')) {
         return 1;
@@ -71,10 +119,21 @@ function getState(td) {
     }
 }
 
+/**
+ *
+ * @param td
+ * @param pattern
+ * @returns {*}
+ */
 function changeState(td, pattern) {
     return td.addClass(pattern);
 }
 
+/**
+ *
+ * @param player
+ * @returns {string}
+ */
 function definePatternForCurrentPlayer(player) {
     if(player == 1) {
         return 'cross';
@@ -83,6 +142,11 @@ function definePatternForCurrentPlayer(player) {
     }
 }
 
+/**
+ *
+ * @param player
+ * @returns {number}
+ */
 function setNextPlayer(player) {
     if(player == 1) {
         return player = 2;
@@ -91,10 +155,37 @@ function setNextPlayer(player) {
     }
 }
 
+/**
+ *
+ * @param turn
+ * @param player
+ */
 function displayNextPlayer(turn, player) {
     turn.html('Player turn : '+player);
 }
 
+/**
+ *
+ * @param table
+ * @returns {boolean}
+ */
+function checkIfTie(table) {
+    var tie = true;
+    table.find('td').each(function() {
+        if (!$(this).hasClass('cross') && !$(this).hasClass('circle')){
+            tie = false;
+            return false;
+        }
+    });
+    return tie;
+}
+
+/**
+ *
+ * @param table
+ * @param pattern
+ * @returns {number}
+ */
 function checkIfPlayerWon(table, pattern) {
 
     var won = 0;
@@ -118,6 +209,10 @@ function checkIfPlayerWon(table, pattern) {
     return won;
 }
 
+/**
+ *
+ * @param table
+ */
 function reset(table) {
     table.find('td').each(function() {
         $(this).removeClass('circle').removeClass('cross');

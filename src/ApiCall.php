@@ -1,2 +1,11 @@
 <?php
+header('Content-Type: application/json');
+include_once 'Move.php';
 
+if (!isset($_POST['boardState']) || !isset($_POST['playerUnit'])){
+    die("Empty Parameters!");
+}
+
+$move = new \Api\Move();
+$response = $move->makeMove($_POST['boardState'],$_POST['playerUnit']);
+echo json_encode($response);

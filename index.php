@@ -6,24 +6,26 @@
 
 <div class="messages"></div>
 <div class="turn"></div>
+
+<br/><label><input type="checkbox" id="autoplay"> Auto Player</label>
+
 <table>
     <tr>
-        <td class="item1" data-num="1"></td>
-        <td class="item2" data-num="2"></td>
-        <td class="item3" data-num="3"></td>
+        <td class="item1" data-x="0" data-y="0"></td>
+        <td class="item2" data-x="1" data-y="0"></td>
+        <td class="item3" data-x="2" data-y="0"></td>
     </tr>
     <tr>
-        <td class="item4"data-num="4"></td>
-        <td class="item5"data-num="5"></td>
-        <td class="item6"data-num="6"></td>
+        <td class="item4" data-x="0" data-y="1"></td>
+        <td class="item5" data-x="1" data-y="1"></td>
+        <td class="item6" data-x="2" data-y="1"></td>
     </tr>
     <tr>
-        <td class="item7"data-num="7"></td>
-        <td class="item8"data-num="8"></td>
-        <td class="item9"data-num="9"></td>
+        <td class="item7" data-x="0" data-y="2"></td>
+        <td class="item8" data-x="1" data-y="2"></td>
+        <td class="item9" data-x="2" data-y="2"></td>
     </tr>
 </table>
-<br/><label>Auto Player <input type="checkbox" id="autoplay"></label>
 
 <br/><input class="reset" type="button" value="Reset"/>
 
