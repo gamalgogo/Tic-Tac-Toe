@@ -17,11 +17,12 @@ if "Auto Player" is checked, just make a move and computer will do the next move
 
 ## Testing
 
-Installing PHPUnit Using Composer :
+Installing PHPUnit Using Composer:
 
 ```
-composer install
+composer.phar install
 ```
+
 
 you can run the simple test by using this command line
 
