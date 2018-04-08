@@ -7,7 +7,7 @@
 <div class="messages"></div>
 <div class="turn"></div>
 
-<br/><label><input type="checkbox" id="autoplay"> Auto Player</label>
+<br/><label><input type="checkbox" id="autoplay" checked> Auto Player</label>
 
 <table>
     <tr>

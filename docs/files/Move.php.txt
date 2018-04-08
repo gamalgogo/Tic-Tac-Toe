@@ -61,9 +61,6 @@ class Move implements MoveInterface
      */
     public function makeMove($boardState, $playerUnit = 'X')
     {
-        if (empty($boardState))
-            return [];
-
         $AIPlayer = 'O';
         if ($playerUnit == 'O') {
             $AIPlayer = 'X';
@@ -172,10 +169,32 @@ class Move implements MoveInterface
         return $win;
     }
 
-    function getGoodMove()
-    {
-        return $this->emptyCells[rand(0, count($this->emptyCells) - 1)];
-    }
+        function getGoodMove()
+        {
+            return $this->emptyCells[rand(0, count($this->emptyCells) - 1)];
+
+/*
+            $move = false;
+            $playerCells = array_flip($this->$player);
+
+            if (empty($playerCells)) {
+                return $this->emptyCells[rand(0, count($this->emptyCells) - 1)];
+            }
+
+            foreach ($this->emptyCells as $cell) {
+
+                $playerCells[$cell] = count($playerCells);
+
+                if ($this->isGoodMove($playerCells, $cell)) {
+                    $move = $cell;
+                    break;
+                }
+                unset($playerCells[$cell]);
+            }
+
+            return $move;
+*/
+        }
 
     /*
         function isGoodMove($playerCells, $cell)
@@ -217,3 +236,4 @@ class Move implements MoveInterface
     */
 
 }
+
